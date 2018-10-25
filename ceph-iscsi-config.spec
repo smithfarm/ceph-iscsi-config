@@ -88,10 +88,28 @@ statistics, supporting monitoring and visualisation tools like Grafana.
 mkdir -p %{buildroot}%{_unitdir}
 install -m 0644 .%{_unitdir}/rbd-target-gw.service %{buildroot}%{_unitdir}
 
-
 %post
+%if 0%{?suse_version}
+%service_add_post rbd-target-gw.service
+%else
 /bin/systemctl --system daemon-reload &> /dev/null || :
 /bin/systemctl --system enable rbd-target-gw &> /dev/null || :
+%endif
+
+%pre
+%if 0%{?suse_version}
+%service_add_pre rbd-target-gw.service
+%endif
+
+%postun
+%if 0%{?suse_version}
+%service_del_postun rbd-target-gw.service
+%endif
+
+%preun
+%if 0%{?suse_version}
+%service_del_preun rbd-target-gw.service
+%endif
 
 %files
 %doc LICENSE
