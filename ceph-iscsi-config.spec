@@ -14,6 +14,11 @@
 #
 # Please submit bugfixes or comments via http://tracker.ceph.com/
 #
+%if 0%{?suse_version}
+%global __python_binary %{__python3}
+%else
+%global __python_binary %{__python2}
+%endif
 
 Name:           ceph-iscsi-config
 Version:        2.7
@@ -76,10 +81,10 @@ statistics, supporting monitoring and visualisation tools like Grafana.
 %endif
 
 %build
-%{__python2} setup.py build
+%{__python_binary} setup.py build
 
 %install
-%{__python2} setup.py install -O1 --skip-build --root %{buildroot}  --install-scripts %{_bindir}
+%{__python_binary} setup.py install -O1 --skip-build --root %{buildroot}  --install-scripts %{_bindir}
 mkdir -p %{buildroot}%{_unitdir}
 install -m 0644 .%{_unitdir}/rbd-target-gw.service %{buildroot}%{_unitdir}
 
