@@ -1,14 +1,47 @@
+#
+# spec file for package ceph-iscsi-config
+#
+# Copyright (C) 2017-2018 The Ceph iSCSI Config Project Developers. See
+# COPYING file at the top-level directory of this distribution and at
+# https://github.com/ceph-iscsi-config/ceph/blob/master/COPYING
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon.
+#
+# This file is under the GNU General Public License, version 3 or any
+# later version.
+#
+# Please submit bugfixes or comments via http://tracker.ceph.com/
+#
+
 Name:           ceph-iscsi-config
 Version:        2.7
 Release:        1%{?dist}
-Summary:        Python package providing modules for ceph iscsi gateway configuration management
+Summary:        Python package providing modules for Ceph iSCSI gateway configuration management
 
-License:        GPLv3
-URL:            https://github.com/smithfarm/ceph-iscsi-config
+License:        GPL-3.0-or-later
+URL:            https://github.com/ceph/ceph-iscsi-config
+%if 0%{?suse_version}
 Source0:        %{name}.tar.gz
+%else
+Source0: https://github.com/ceph/ceph-iscsi-config/archive/%{version}/%{name}-%{version}.tar.gz
+%endif
 
 BuildArch:  noarch
 
+%if 0%{?suse_version}
+Requires:  python3-rados >= 10.2.2
+Requires:  python3-rbd >= 10.2.2
+Requires:  python3-netaddr >= 0.7.5
+Requires:  python3-netifaces >= 0.10.4
+Requires:  python3-rtslib >= 2.1.fb67
+Requires:  python3-rpm >= 4.11
+Requires:  python3-crypto >= 2.6
+Requires:  python3-flask >= 0.10.1
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+%else
 Requires:  python-rados >= 10.2.2
 Requires:  python-rbd >= 10.2.2
 Requires:  python-netaddr >= 0.7.5
@@ -17,9 +50,9 @@ Requires:  python-rtslib >= 2.1.fb67
 Requires:  rpm-python >= 4.11
 Requires:  python-crypto >= 2.6
 Requires:  python-flask >= 0.10.1
-
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools
+%endif
 BuildRequires:  systemd
 
 %description
@@ -36,7 +69,11 @@ rbd-target-gw also provides a prometheus exporter for gateway LIO performance
 statistics, supporting monitoring and visualisation tools like Grafana.
 
 %prep
+%if 0%{?suse_version}
+%setup -c -q
+%else
 %setup -q
+%endif
 
 %build
 %{__python2} setup.py build
